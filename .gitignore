@@ -1,2 +1,4 @@
 .env
 courses.json
+index.faiss
+index.pkl
