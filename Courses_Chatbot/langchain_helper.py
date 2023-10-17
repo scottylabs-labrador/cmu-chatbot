@@ -43,10 +43,11 @@ def get_response_from_query(db, query, k=4):
         input_variables=["question", "docs"],
         template = """
         You are a helpful Course Reccomendation assistant that can reccommend courses based on their description.  
-        Answer the following question: {question}
+        Answer the following question: {question} What courses do you reccomend?
         By searching the following Carnegie Mellon courses: {docs}
 
         Only use the factual information from the course descriptions to answer the question.set
+        Include the course number and title of courses that you recommend.
         If you feel like you don't have enough information to answer the question,
         say "I don't know".ImportError
         Your answers should be detailed.
