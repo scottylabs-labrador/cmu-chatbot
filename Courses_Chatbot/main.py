@@ -19,4 +19,6 @@ if query:
     response = lch.get_response_from_query(db, query)
     #docs = response = lch.get_response_from_query(db, query)
     st.subheader("Answer: ")
-    st.text(textwrap.fill(response, width = 80))
+    #st.text(textwrap.fill(response, width = 80))
+    repo = '<p style="font-family:sans-serif; color:Black; font-size: 20px;">' + response + '</p>'
+    st.markdown(repo, unsafe_allow_html=True)
