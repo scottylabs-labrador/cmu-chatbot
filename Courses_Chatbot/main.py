@@ -14,7 +14,7 @@ with st.sidebar:
 
         submit_button = st.form_submit_button(label='Submit')
 
-if query:
+if query and submit_button:
     db = lch.get_vector_loaded_db()
     response = lch.get_response_from_query(db, query)
     #docs = response = lch.get_response_from_query(db, query)
