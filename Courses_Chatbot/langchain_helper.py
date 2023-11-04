@@ -1,4 +1,4 @@
-from langchain.document_loaders import YoutubeLoader
+#from langchain.document_loaders import YoutubeLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.llms import OpenAI
 from langchain.embeddings.openai import OpenAIEmbeddings
@@ -14,7 +14,7 @@ from langchain.document_loaders import PyPDFLoader
 
 load_dotenv()
 
-embeddings = OpenAIEmbeddings()
+embeddings = OpenAIEmbeddings() # use embeddings from OpenAI
 '''
 def create_vector_db_from_json() -> FAISS:
     loader = JSONLoader(
@@ -24,9 +24,9 @@ def create_vector_db_from_json() -> FAISS:
 
     data = loader.load()
 
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size= 1000, chunk_overlap=100)
-    docs = text_splitter.split_documents(data)
-    db = FAISS.from_documents(docs, embeddings)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size= 1000, chunk_overlap=100) # create splitter to split data into chunks
+    docs = text_splitter.split_documents(data) # split data into chunks
+    db = FAISS.from_documents(docs, embeddings) # embed data using OpenAI embeddings
     return db
 '''#Do not use the function above it is very computationally expensive, instead used pre-embedded database used by get_vector_laoded_db().
 
@@ -49,15 +49,15 @@ def get_vector_loaded_db():
 
 def get_response_from_query(db, query, k=2):#Changed k to 2 from 4 while using ugrad catalog as datasource.
     # text-davinci can hand 4097 tokens
-    #What courses do you reccomend?
-    docs = db.similarity_search(query, k=k)
+    # What courses do you recommend?
+    docs = db.similarity_search(query, k=k) # narrows down the course data to the ones similar to query
     docs_page_content = " ".join([d.page_content for d in docs])
-    llm = OpenAI(model="gpt-3.5-turbo-instruct")
-    #Use gpt-3.5-turbo-instruct for great responses at preferable prices
+
+    llm = OpenAI(model="gpt-3.5-turbo-instruct") # Use gpt-3.5-turbo-instruct for great responses at preferable prices
     prompt = PromptTemplate(
         input_variables=["question", "docs"],
         template = """
-        You are a helpful Course Reccomendation assistant that can reccommend courses based on their description.  
+        You are a helpful Course Recommendation assistant that can recommend courses based on their description.  
         Answer the following question: {question} 
         By searching the following Carnegie Mellon courses: {docs}
 
@@ -65,11 +65,11 @@ def get_response_from_query(db, query, k=2):#Changed k to 2 from 4 while using u
         Include the course number and title of courses that you recommend.
         If you feel like you don't have enough information to answer the question,
         say "I don't know".ImportError
-        Your answer should only include courses that are directly relevant to the question and be detailed. Include at most 1 courses in your response.  Use proper punctuation.
+        Your answer should only include courses that are directly relevant to the question and be detailed. Include at most 1 courses in your response. Use proper punctuation.
         """,
     )
-    chain = LLMChain(llm=llm, prompt = prompt)
-    response = chain.run(question=query, docs = docs_page_content)
+    chain = LLMChain(llm=llm, prompt=prompt)
+    response = chain.run(question=query, docs=docs_page_content)
     response = response.replace("\n", "")
     return response
 
