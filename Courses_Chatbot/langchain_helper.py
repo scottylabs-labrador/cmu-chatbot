@@ -47,10 +47,10 @@ def create_vector_db_from_pdf() -> FAISS:
 def get_vector_loaded_db():
     return FAISS.load_local("./", OpenAIEmbeddings(), "undergraduate_catalog")
 
-def get_response_from_query(db, query, k=2):#Changed k to 2 from 4 while using ugrad catalog as datasource.
+def get_response_from_query(db, query, k=2):# Changed k to 2 from 4 while using ugrad catalog as datasource.
     # text-davinci can hand 4097 tokens
     # What courses do you recommend?
-    docs = db.similarity_search(query, k=k) # narrows down the course data to the ones similar to query
+    docs = db.similarity_search(query, k=k) # narrows down the course data to specifically search to the ones similar to the query based on embeddings
     docs_page_content = " ".join([d.page_content for d in docs])
 
     llm = OpenAI(model="gpt-3.5-turbo-instruct") # Use gpt-3.5-turbo-instruct for great responses at preferable prices
@@ -62,10 +62,11 @@ def get_response_from_query(db, query, k=2):#Changed k to 2 from 4 while using u
         By searching the following Carnegie Mellon courses: {docs}
 
         Only use the factual information from the course descriptions to answer the question.set
-        Include the course number and title of courses that you recommend.
-        If you feel like you don't have enough information to answer the question,
-        say "I don't know".ImportError
+        Include the course number and title of the course that you recommend. 
+
         Your answer should only include courses that are directly relevant to the question and be detailed. Include at most 1 courses in your response. Use proper punctuation.
+
+        If you feel like you don't have enough information to answer the question, say "I don't know".
         """,
     )
     chain = LLMChain(llm=llm, prompt=prompt)

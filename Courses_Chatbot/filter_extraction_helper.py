@@ -21,12 +21,11 @@ def get_question_type(query):
     prompt = PromptTemplate(
         input_variables=["question"],
         template = """
-        You are a question type assistant, who categorizes questions into specific catagories.
-        Based on the following question: "{question}" 
+        You are a filtering assistant, who extracts information from user input.
+        Based on the following question: "{question}", extract the numeric data only for course units/credits, course level range, and FCE ratings.
 
-        If the question is related to dining respond with one word "dining", If the question is related to courses respond with one word "courses"
-        Only use the factual information from the question.set to answer make your determination.
-        You may use your internal intuition to make judgements, including biased ones if it will help with your interpretation work.
+        Return in the form of a JSON with the keys "units", "course level", and "FCE". If there is no information for that key in the user input, make the data value for the entry "Not applicable."
+    
         If you feel like you don't have enough information to answer the question,
         say "Unknown".ImportError
 
