@@ -1,6 +1,6 @@
 import streamlit as st
 import langchain_helper as lch
-import example_decision_helper as dh
+import ugrad_vs_grad_decision as dh
 import textwrap
 
 st.title("Carnegie Mellon Course Recommender")

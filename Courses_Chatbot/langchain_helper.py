@@ -36,23 +36,24 @@ def create_vector_db_from_pdf() -> FAISS:
 
     pages = loader.load_and_split()
 
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size= 2000, chunk_overlap=50)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size= 1000, chunk_overlap=50)
     docs = text_splitter.split_documents(pages)
     db = FAISS.from_documents(pages, embeddings)
-    db.save_local("./", "undergraduate_catalog")
+    db.save_local("./", "undergraduate_catalog_chunk_size_1000_overlap_50")
     return db
-    ''' #Do not use this function because it is computationally expensive, instead use pre-embedded database.
-
-
+     #Do not use this function because it is computationally expensive, instead use pre-embedded database.
+create_vector_db_from_pdf()
+'''
 def get_vector_loaded_db():
-    return FAISS.load_local("./", OpenAIEmbeddings(), "undergraduate_catalog")
+    return FAISS.load_local("./", OpenAIEmbeddings(), "undergraduate_catalog_chunk_size_1000_overlap_50")
 
-def get_response_from_query(db, query, k=2):#Changed k to 2 from 4 while using ugrad catalog as datasource.
+def get_response_from_query(db, query, k=4):#Changed k to 2 from 4 while using ugrad catalog as datasource.
     # text-davinci can hand 4097 tokens
     #What courses do you reccomend?
     docs = db.similarity_search(query, k=k)
     docs_page_content = " ".join([d.page_content for d in docs])
     llm = OpenAI(model="gpt-3.5-turbo-instruct")
+    #gpt-3.5-turbo-instruct
     #Use gpt-3.5-turbo-instruct for great responses at preferable prices
     prompt = PromptTemplate(
         input_variables=["question", "docs"],
@@ -66,6 +67,7 @@ def get_response_from_query(db, query, k=2):#Changed k to 2 from 4 while using u
         If you feel like you don't have enough information to answer the question,
         say "I don't know".ImportError
         Your answer should only include courses that are directly relevant to the question and be detailed. Include at most 1 courses in your response.  Use proper punctuation.
+
         """,
     )
     chain = LLMChain(llm=llm, prompt = prompt)
