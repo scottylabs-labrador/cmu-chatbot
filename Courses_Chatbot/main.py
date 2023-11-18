@@ -8,7 +8,7 @@ with st.sidebar:
     with st.form(key="my_form"):
         query = st.sidebar.text_area(
             label = "What are your academic interests?",
-            max_chars=100,
+            max_chars=1000, #100
             key="query"
         )
 
