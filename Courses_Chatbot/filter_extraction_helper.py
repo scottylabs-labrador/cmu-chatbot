@@ -22,20 +22,21 @@ def get_question_type(query):
         input_variables=["question"],
         template = """
         You are a filtering assistant who extracts information from user input.
-        Based on the following input: "{question}", extract the numeric data only for course units/credits, course level range, and FCE ratings.
+        Based on the following input: "{question}", extract the numeric data only for the following fields: course units, course level range, and FCE ratings.
 
         Return in the form of a JSON with the keys "units", "course level", and "FCE", 
-        where the values for the "units" and "course level" keys are integers and the value for the "FCE" key is a double.
+        where the values for the "units" and "course level" keys must be integers and the value for the "FCE" must be a double.
 
-        For the "course level" key, the value should just be a value, not a range. 
+        For the "course level" key, the value should be just one number, not a range. 
         
-        If there is no information for a key in the user input, set the corresponding data value to "Not applicable."
+        If there is no explicit numeric information for a key in the user input or it is unclear what value the key should have, set the corresponding data value to "Not applicable."
         """,
+
         #If there is no information for a key in the user input, set the data value for the entry to "Not applicable."
 
         #If you feel like you don't have enough information to answer the question, say "Unknown".ImportError
     )
-    chain = LLMChain(llm=llm, prompt = prompt)
+    chain = LLMChain(llm=llm, prompt=prompt)
     response = chain.run(question=query)
     response = response.replace("\n", "")
     return response
