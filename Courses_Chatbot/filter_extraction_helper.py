@@ -30,6 +30,8 @@ def get_question_type(query):
         For the "course level" key, the value should be just one number, not a range. 
         
         If there is no explicit numeric information for a key in the user input or it is unclear what value the key should have, set the corresponding data value to "Not applicable."
+
+        Only return the JSON, do not return anything else.
         """,
 
         #If there is no information for a key in the user input, set the data value for the entry to "Not applicable."
