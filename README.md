@@ -1,4 +1,4 @@
-# cmu-chatbot
+# Scotty's Course Reccomender
 
  
 
